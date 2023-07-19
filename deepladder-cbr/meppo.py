@@ -1,6 +1,9 @@
 import math
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+config = tf.ConfigProto(allow_soft_placement=True)
 import os
 import time
 os.environ['CUDA_VISIBLE_DEVICES'] = '2'

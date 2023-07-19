@@ -5,7 +5,10 @@ import os
 import sys
 import fixed_network_env as f_env
 import meppo as network
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+config = tf.ConfigProto(allow_soft_placement=True)
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
@@ -68,6 +71,7 @@ def main():
 
                 obs, rew, done, info = env.step(act)
                 # log time_stamp, bit_rate, buffer_size, reward
+                #print("Write reward to the test_result log")
                 log_file.write(str(act) + '\t' +
                             str(entropy_) + '\t' + 
                             str(rew) + '\n')

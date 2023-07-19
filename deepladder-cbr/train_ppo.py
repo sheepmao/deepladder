@@ -3,11 +3,14 @@ import numpy as np
 import logging
 import os
 import sys
+import time
 # import network_env as NetworkEnv
 import network_env as NetworkEnv
 import meppo as network
-import tensorflow as tf
-
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+config = tf.ConfigProto(allow_soft_placement=True)
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -45,8 +48,9 @@ def testing(epoch, nn_model, log_file):
     if not os.path.exists(TEST_LOG_FOLDER):
         os.makedirs(TEST_LOG_FOLDER)
     # run test script
-    os.system('python rl_test.py ' + nn_model)
-
+    print("Doing RL test to get reward")
+    os.system('python3 rl_test.py ' + nn_model)
+    time.sleep(3)
     # append test performance to the log
     rewards, entropies = [], []
     test_log_files = os.listdir(TEST_LOG_FOLDER)
@@ -62,10 +66,10 @@ def testing(epoch, nn_model, log_file):
                     break
         rewards.append(reward[-1])
         entropies.append(np.mean(entropy))
-
+    
     rewards = np.array(rewards)
 
-    rewards_min = np.min(rewards)
+    rewards_min = np.nanmin(rewards)
     rewards_5per = np.percentile(rewards, 5)
     rewards_mean = np.mean(rewards)
     rewards_median = np.percentile(rewards, 50)
